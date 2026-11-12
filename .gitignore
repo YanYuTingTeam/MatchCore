@@ -1,0 +1,15 @@
+*.log
+*.err
+*.class
+*.zip
+target/
+build/
+*.iml
+.idea/
+.vscode/
+*.*~
+AGENTS.md
+TASK.md
+.env
+.env.*
+!.env.example
