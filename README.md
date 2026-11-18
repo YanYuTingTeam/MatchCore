@@ -1,5 +1,7 @@
 # MatchCore
 
+> 对比AerServerMonitor, 该项目是多余的。于是该项目放弃开发. 请前往 [https://github.com/YanYuTingTeam/AerServerMonitor](https://github.com/YanYuTingTeam/AerServerMonitor)
+
 独立于 Minecraft 服务端的 Go 匹配服务, 集中采集 SLP/Redis 状态、维护分组、返回优选房间并写入60秒入房票据
 
 完整职责、兼容协议和迁移步骤见 [改动方案](PLAN.md), 本轮进度与验证见 [TASK.md](TASK.md)
@@ -87,5 +89,3 @@ go build ./...
 ```
 
 测试使用受控miniredis和本地TCP/HTTP, 覆盖跨服同名地图、房间过期/满员/状态、Redis写入失败、扫描预算和SLP分片/取消. 没有访问生产Redis或真实Minecraft客户端, 实服与跨插件组合联调仍需要验证
-
-本轮不创建提交. 既有 `.gitignore` 忽略 `TASK.md`, 将来如果需要版本化任务记录, 由用户决定是否调整该忽略规则
