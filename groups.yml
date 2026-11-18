@@ -1,0 +1,17 @@
+servers:
+  bw-example:
+    address: "127.0.0.1:25565"
+groups:
+  bw-solo:
+    method: redis
+    modes: [solo]
+    joinable-states: [WAITING, STARTING]
+    key-prefix: "bedwars:"
+    channel: "bedwars:match"
+    server-filter: []
+    arena-exclude: []
+  bw-motd:
+    method: motd
+    servers: [bw-example]
+    motd-patterns:
+      - "State: [1-2]"

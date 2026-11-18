@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "playerUuid": "00000000-0000-0000-0000-000000000001",
+  "group": "bw-solo",
+  "room": {
+    "roomId": "bedwars:solo:127.0.0.2:25565:arena1",
+    "method": "redis",
+    "address": "127.0.0.2:25565",
+    "serverName": "",
+    "arenaName": "arena1",
+    "mode": "solo",
+    "channel": "bedwars:match",
+    "playerCount": 5,
+    "maxPlayers": 8,
+    "state": "WAITING",
+    "motd": "",
+    "collectedAt": 1794531302749,
+    "expiresAt": 1794531317749
+  },
+  "issuedAt": 1794531302749,
+  "expiresAt": 1794531362749
+}

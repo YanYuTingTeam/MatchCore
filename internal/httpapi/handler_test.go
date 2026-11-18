@@ -69,7 +69,7 @@ func TestAPIAuthAndPlaceholder(t *testing.T) {
 			want := http.StatusUnauthorized
 			if allowed {
 				request.Header.Set("Authorization", "Bearer "+token)
-				want = http.StatusNotImplemented
+				want = http.StatusServiceUnavailable
 			}
 			reply := httptest.NewRecorder()
 			handler.ServeHTTP(reply, request)

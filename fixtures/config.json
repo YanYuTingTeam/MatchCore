@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "configVersion": "daea1a83f9c6b4af10ae8238152f86b7fc678416d936a6b66fb9c79246ac1993",
+  "ticketTtlMillis": 60000,
+  "groups": [
+    {
+      "name": "bw-motd",
+      "method": "motd",
+      "modes": [],
+      "joinableStates": [
+        "ONLINE"
+      ],
+      "channel": "",
+      "keyPrefix": "",
+      "serverFilter": [],
+      "arenaExclude": [],
+      "servers": [
+        "bw-example"
+      ],
+      "motdPatterns": [
+        "State: [1-2]"
+      ]
+    },
+    {
+      "name": "bw-solo",
+      "method": "redis",
+      "modes": [
+        "solo"
+      ],
+      "joinableStates": [
+        "WAITING",
+        "STARTING"
+      ],
+      "channel": "bedwars:match",
+      "keyPrefix": "bedwars:",
+      "serverFilter": [],
+      "arenaExclude": [],
+      "servers": [],
+      "motdPatterns": []
+    }
+  ],
+  "servers": [
+    {
+      "name": "bw-example",
+      "address": "127.0.0.1:25565"
+    }
+  ]
+}

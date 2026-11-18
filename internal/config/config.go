@@ -22,6 +22,11 @@ type Config struct {
 	RedisPoolSize   int
 	RedisTimeout    time.Duration
 	ShutdownTimeout time.Duration
+	GroupsFile      string
+	RedisPrefix     string
+	RefreshInterval time.Duration
+	CollectTimeout  time.Duration
+	SnapshotTTL     time.Duration
 }
 
 type fileConfig struct {
@@ -53,6 +58,9 @@ func Load(path string) (Config, error) {
 		"MATCHCORE_REDIS_PASSWORD": true, "MATCHCORE_REDIS_DB": true,
 		"MATCHCORE_REDIS_TLS": true, "MATCHCORE_REDIS_POOL_SIZE": true,
 		"MATCHCORE_REDIS_TIMEOUT": true, "MATCHCORE_SHUTDOWN_TIMEOUT": true,
+		"MATCHCORE_GROUPS_FILE": true, "MATCHCORE_REDIS_PREFIX": true,
+		"MATCHCORE_REFRESH_INTERVAL": true, "MATCHCORE_COLLECT_TIMEOUT": true,
+		"MATCHCORE_SNAPSHOT_TTL": true,
 	}
 	for key := range values {
 		if !known[key] {
@@ -110,6 +118,23 @@ func Load(path string) (Config, error) {
 			return Config{}, errors.New("MATCHCORE_API_TOKEN 必须为 32 到 256 字节的可见 ASCII 字符")
 		}
 	}
+	groupsFile := get("MATCHCORE_GROUPS_FILE", "groups.yml")
+	prefix := get("MATCHCORE_REDIS_PREFIX", "matchcore:")
+	if groupsFile == "" || len(groupsFile) > 512 || strings.ContainsAny(groupsFile, "\r\n\x00") || len(prefix) == 0 || len(prefix) > 64 || !strings.HasSuffix(prefix, ":") || strings.ContainsAny(prefix, " \t\r\n\x00*?[]{}") {
+		return Config{}, errors.New("分组文件路径或Redis前缀无效")
+	}
+	refresh, err := time.ParseDuration(get("MATCHCORE_REFRESH_INTERVAL", "3s"))
+	if err != nil || refresh < time.Second || refresh > time.Minute {
+		return Config{}, errors.New("采集间隔必须为1s到1m")
+	}
+	collect, err := time.ParseDuration(get("MATCHCORE_COLLECT_TIMEOUT", "5s"))
+	if err != nil || collect < 100*time.Millisecond || collect > 30*time.Second {
+		return Config{}, errors.New("采集时限必须为100ms到30s")
+	}
+	snapshotTTL, err := time.ParseDuration(get("MATCHCORE_SNAPSHOT_TTL", "15s"))
+	if err != nil || snapshotTTL < refresh+collect || snapshotTTL > 5*time.Minute {
+		return Config{}, errors.New("快照有效期不得小于采集间隔加时限, 且不得超过5m")
+	}
 	return Config{
 		HTTPAddr:        wen.HTTPAddr,
 		APIToken:        token,
@@ -121,6 +146,8 @@ func Load(path string) (Config, error) {
 		RedisPoolSize:   wen.RedisPoolSize,
 		RedisTimeout:    redisWait,
 		ShutdownTimeout: stopWait,
+		GroupsFile:      groupsFile, RedisPrefix: prefix, RefreshInterval: refresh,
+		CollectTimeout: collect, SnapshotTTL: snapshotTTL,
 	}, nil
 }
 
